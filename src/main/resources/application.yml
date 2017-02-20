@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/gm
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+    #JPA Configuration:
+  jpa:
+    database: MYSQL
+    show-sql: true
+    generate-ddl: true
+
+    hibernate:
+    # Hibernate ddl auto (create, create-drop, update)
+      ddl-auto: update
+        #spring.jpa.database=org.hibernate.dialect.MySQL5InnoDBDialect
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+
+  mvc:
+    view:
+      prefix: /WEB-INF/view/
+      suffix: .html
+        #spring.resources.static-locations=classpath:/resources/,classpath:/static/
