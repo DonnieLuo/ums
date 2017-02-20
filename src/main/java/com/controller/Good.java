@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class Good {
     @Autowired
-    private SMSRepository smsRepository;
+    private SMSRepository SMSRepository;
 
     @Test
     public void dof() {
@@ -26,9 +26,9 @@ public class Good {
 
         SMSLog smsLog = new SMSLog();
         smsLog.setDate(new Date());
-        smsLog.setSmsResult(smsResult);
+//        smsLog.setSmsResult(smsResult);
 
-        smsRepository.save(smsLog);
+        SMSRepository.save(smsLog);
 
     }
 }

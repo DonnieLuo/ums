@@ -1,9 +1,8 @@
 package com.Entity.sentLog;
 
-import com.Entity.SMS.SMSResult;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
@@ -11,8 +10,9 @@ import java.util.Date;
  */
 @Entity
 public class SMSLog {
+    @Id
     private Long id;
-    private SMSResult smsResult;
+//    private SMSResult smsResult;
     private Date date;
 
     @GeneratedValue
@@ -32,13 +32,13 @@ public class SMSLog {
         this.date = date;
     }
 
-    public SMSResult getSmsResult() {
-        return smsResult;
-    }
-
-    public void setSmsResult(SMSResult smsResult) {
-        this.smsResult = smsResult;
-    }
+//    public SMSResult getSmsResult() {
+//        return smsResult;
+//    }
+//
+//    public void setSmsResult(SMSResult smsResult) {
+//        this.smsResult = smsResult;
+//    }
 
 
 }

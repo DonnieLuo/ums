@@ -1,19 +1,19 @@
 package com.service;
 
+import com.Entity.Token;
 import com.Entity.msg.MsgResult;
 import com.Entity.msg.TextMsg;
-import com.Entity.Token;
 import com.google.gson.Gson;
 import com.util.UrlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Donnie on 2017/2/20.
  */
-@Component
+@Service
 public class MsgService {
     private static Logger logger = LoggerFactory.getLogger(MsgService.class);
     @Autowired

@@ -4,17 +4,20 @@ package com.controller;
  * Created by Donnie on 2017/2/17.
  */
 
+import com.Entity.Token;
 import com.Entity.msg.Text;
 import com.Entity.msg.TextMsg;
-import com.Entity.Token;
 import com.google.gson.Gson;
 import com.util.UrlUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class Controller {
+    private static Logger logger = LoggerFactory.getLogger(Controller.class);
     @Autowired
     private UrlUtil urlUtil;
 

@@ -1,5 +1,7 @@
 package com.util;
 
+import org.springframework.stereotype.Component;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -10,6 +12,7 @@ import java.io.StringWriter;
 /**
  * Created by Donnie on 2017/2/20.
  */
+@Component
 public class XmlUtil {
     public static String toXml(Object obj) {
         String xmlStr = null;
