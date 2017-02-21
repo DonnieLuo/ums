@@ -1,5 +1,6 @@
 package com.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
@@ -13,6 +14,7 @@ import java.io.StringWriter;
  * Created by Donnie on 2017/2/20.
  */
 @Component
+@Slf4j
 public class XmlUtil {
     public static String toXml(Object obj) {
         String xmlStr = null;
@@ -26,7 +28,7 @@ public class XmlUtil {
             marshaller.marshal(obj, writer);
             xmlStr = writer.toString();
         } catch (JAXBException e) {
-            e.printStackTrace();
+            log.error(e.toString());
         }
         return xmlStr;
     }
@@ -39,8 +41,7 @@ public class XmlUtil {
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             result = (T) jaxbUnmarshaller.unmarshal(reader);
         } catch (JAXBException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e.toString());
         }
         return result;
     }

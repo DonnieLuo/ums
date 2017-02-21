@@ -1,13 +1,12 @@
 package com.repository;
 
-import com.Entity.sentLog.SMSLog;
+import com.Entity.sentLog.SendLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Created by Donnie on 2017/2/20.
+ * Created by Donnie on 2017/2/21.
  */
 @Repository
-public interface SMSRepository extends JpaRepository<SMSLog, Long> {
-
+public interface LogRepository extends JpaRepository<SendLog, Long> {
 }

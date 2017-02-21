@@ -1,5 +1,6 @@
 package com.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,8 @@ import java.net.URLConnection;
  * Created by Donnie on 2017/2/20.
  */
 @Component
+@Slf4j
 public class UrlUtil {
-    private static Logger logger = LoggerFactory.getLogger(UrlUtil.class);
     public static String urlGet (String urlStr) {
         StringBuilder json = new StringBuilder();
         BufferedReader in = null;
@@ -31,14 +32,14 @@ public class UrlUtil {
                 json.append(inputLine);
             }
         } catch (MalformedURLException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
         } catch (IOException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
         }finally {
             try {
                 in.close();
             } catch (IOException e) {
-                logger.error(e.toString());
+                log.error(e.toString());
             }
         }
         return json.toString();
@@ -66,7 +67,7 @@ public class UrlUtil {
             in.close();
             out.close();
         } catch (Exception e) {
-            logger.error(e.toString());
+            log.error(e.toString());
         }
         return response.toString();
     }

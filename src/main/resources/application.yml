@@ -13,13 +13,15 @@ spring:
 
     hibernate:
     # Hibernate ddl auto (create, create-drop, update)
-      ddl-auto: update
+      ddl-auto: create
         #spring.jpa.database=org.hibernate.dialect.MySQL5InnoDBDialect
-      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      dialect: org.hibernate.dialect.MySQLDialect
+  thymeleaf:
+    prefix: classpath:/template/
+    suffix: .html
+    cache: false
 
-
-  mvc:
-    view:
-      prefix: /WEB-INF/view/
-      suffix: .html
         #spring.resources.static-locations=classpath:/resources/,classpath:/static/
+conf:
+  urls:
+    gettoken: https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wxac0c7f608dd7b462&corpsecret=94vG_nM3VE1HM0iACx9_fxOLFuapDyGjZJKjyB5jrpviDQTr0LSUYY_28IaOppel
