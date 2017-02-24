@@ -27,11 +27,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .anyRequest().authenticated()
-                .and().formLogin().usernameParameter("username").passwordParameter("password").loginProcessingUrl("/login").loginPage("/login")
-                .and().logout().permitAll().logoutUrl("/logout").logoutSuccessUrl("/login")
-                    .logoutSuccessHandler(logoutSuccessHandler)
-                    .invalidateHttpSession(true).addLogoutHandler(logoutHandler).deleteCookies(new String[] { "cookie名字" })
-                .and().rememberMe();
+                    .anyRequest().authenticated()
+                    .and()
+                .formLogin()
+                    .usernameParameter("username").passwordParameter("password")
+                    .loginProcessingUrl("/login").loginPage("/login")
+                    .and()
+//                .logout().permitAll().logoutUrl("/logout").logoutSuccessUrl("/login")
+//                    .logoutSuccessHandler(logoutSuccessHandler)
+//                    .invalidateHttpSession(true).addLogoutHandler(logoutHandler).deleteCookies(new String[] { "cookie名字" })
+                   .logout()
+                        .permitAll()
+                    .and()
+                .rememberMe();
     }
 }
