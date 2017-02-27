@@ -1,6 +1,5 @@
 package com.service;
 
-import com.Entity.sentLog.SMSLog;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,7 +21,7 @@ public class LogAspect {
 
         Object[] args = jp.getArgs();
         for (Object obj: args) {
-            if (obj instanceof SMSLog) {}
+//            if (obj instanceof SMSLog) {}
         }
     }
 }

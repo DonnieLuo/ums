@@ -14,6 +14,7 @@ public class TextMsg {
     private String msgtype;
     private Integer agentid;
     private Text text;
+    private News mpnews;
     private Integer safe;
 
 }
