@@ -4,11 +4,9 @@ package com.controller;
  * Created by Donnie on 2017/2/17.
  */
 
-import com.Entity.Token;
 import com.Entity.msg.Article;
-import com.Entity.msg.News;
-import com.Entity.msg.Text;
-import com.Entity.msg.TextMsg;
+import com.Entity.msg.MpNews;
+import com.Entity.msg.MpNewsMsg;
 import com.google.gson.Gson;
 import com.repository.LogRepository;
 import com.util.GsonUtil;
@@ -29,8 +27,6 @@ import java.util.List;
 @Controller
 public class LoginController{
 
-    @Autowired
-    private UrlUtil urlUtil;
     @Autowired
     private LogRepository logRepository;
     @Autowired
@@ -67,66 +63,49 @@ public class LoginController{
         return responseAuthentication;
     }*/
     @RequestMapping("/print")
-    public String sendWechat() {
-        String tokenJson = urlUtil.urlGet("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wx3a42b774b7b91ccf&corpsecret=tpfikag8WOgdhafho3-cEgqJVQwTN3daf-u9182mUbVT4H-uHsTqYUye7uk6Acnr");
+    public String sendWechat() throws Exception {
+        String accessToken = UrlUtil.getAccessToken();
 
-        TextMsg msg = new TextMsg();
+        MpNewsMsg msg = new MpNewsMsg();
 
-        Article article = new Article("","testTitle");
-        News news = new News();
+        Article article = new Article(UrlUtil.upload("C:\\Users\\Donnie\\Desktop\\7c739d6.jpg",accessToken, "image" ),"testTitle");
+        article.setDigest("this is the digest");
+        article.setContent("Content");
+        article.setShow_cover_pic(1);
+
+        MpNews mpNews = new MpNews();
         List<Article> articleList = new ArrayList<Article>();
         articleList.add(article);
-        news.setArticles(articleList);
+        mpNews.setArticles(articleList);
 
         msg.setTouser("@all");
-        msg.setMsgtype("news");
+        msg.setMsgtype("mpNews");
         msg.setAgentid(0);
-        msg.setMpnews(news);
+        msg.setMpnews(mpNews);
 
         String jsonContent = gson.toJson(msg);
-        Token token = gson.fromJson(tokenJson, Token.class);
-        String sendUrl = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + token.getAccess_token();
+        String sendUrl = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + accessToken;
         log.debug("--------------------------jsonMsg:{}",jsonContent);
-        return urlUtil.urlPost(sendUrl, jsonContent);
-    }
-    @RequestMapping("/loop")
-    public String loop() {
-        //ty
-        String tokenJson = urlUtil.urlGet("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wx3a42b774b7b91ccf&corpsecret=tpfikag8WOgdhafho3-cEgqJVQwTN3daf-u9182mUbVT4H-uHsTqYUye7uk6Acnr");
-        //ldl
-//        String tokenJson = urlUtil.urlGet("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wxac0c7f608dd7b462&corpsecret=94vG_nM3VE1HM0iACx9_fxOLFuapDyGjZJKjyB5jrpviDQTr0LSUYY_28IaOppel");
-        Token token = gson.fromJson(tokenJson, Token.class);
-
-        String sendUrl = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + token.getAccess_token();
-        TextMsg msg = new TextMsg();
-        msg.setTouser("@all");
-        msg.setMsgtype("text");
-        msg.setAgentid(0);
-        String result = "fail";
-        for (int i=0; i<80; i++) {
-            msg.setText(new Text("System testing message "+i));
-            String jsonContent = gson.toJson(msg);
-            result = urlUtil.urlPost(sendUrl, jsonContent);
-        }
-        return result;
+        return UrlUtil.urlPost(sendUrl, jsonContent);
     }
     @RequestMapping(value = "/img",method = RequestMethod.GET)
     public String selectImg() {
         return "uploadImg";
     }
     @RequestMapping(value = "/img/upload", method = RequestMethod.POST)
-    public String postImg(@RequestParam(value = "media") MultipartFile img) {
+    public String postImg(@RequestParam(value = "media") MultipartFile img) throws Exception {
         String result = uploadImg(img);
         return result;
     }
-    public String uploadImg(MultipartFile img) {
-        String tokenJson = urlUtil.urlGet("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wx3a42b774b7b91ccf&corpsecret=tpfikag8WOgdhafho3-cEgqJVQwTN3daf-u9182mUbVT4H-uHsTqYUye7uk6Acnr");
-        Token token = gson.fromJson(tokenJson, Token.class);
-        String url = "https://qyapi.weixin.qq.com/cgi-bin/media/uploadimg?access_token="+token.getAccess_token();
-        String s = "\r\n";
-        s += 
-        return urlUtil.urlPost(url, img.toString());
-    }
+    public String uploadImg(MultipartFile img) throws Exception {
+        String accessToken = UrlUtil.getAccessToken();
+        String url = "https://qyapi.weixin.qq.com/cgi-bin/media/uploadimg?access_token="+accessToken;
+        StringBuilder head = new StringBuilder("\r\n");
+        String fileUrl = "C:\\Users\\Donnie\\Desktop\\"+img.getOriginalFilename();
 
+        String mediaId = UrlUtil.upload(fileUrl, UrlUtil.getAccessToken(), "image");
+
+        return mediaId;
+    }
 
 }

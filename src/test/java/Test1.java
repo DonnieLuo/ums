@@ -1,5 +1,6 @@
 import com.Entity.SMS.SMSResult;
-import com.Entity.sentLog.SMSLog;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.util.XmlUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,7 @@ public class Test1 {
 
     @Test
     public void test() {
-//        SMSResult result = new SMSResult();
-//        result.setMessage("message");
-//        result.setRemainpoint(20);
-//        String xml = XmlUtil.toXml(result);
-////        System.out.print(xml);
-//        SMSLog smsLog = new SMSLog();
-////        smsLog.setSmsResult(result);
-//        smsLog.setDate(new Date());
-//        System.out.print(smsRepository);
-//        smsRepository.save(smsLog);
+        JsonObject jsonObject = new JsonObject();
+
     }
 }

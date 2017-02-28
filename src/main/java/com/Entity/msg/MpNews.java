@@ -9,6 +9,6 @@ import java.util.List;
  * Created by Donnie on 2017/2/27.
  */
 @Getter @Setter
-public class News {
+public class MpNews {
     private List<Article> articles;
 }

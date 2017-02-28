@@ -2,7 +2,6 @@ package com.service;
 
 import com.Entity.SMS.SMS;
 import com.Entity.SMS.SMSResult;
-import com.Entity.sentLog.SMSLog;
 import com.google.gson.Gson;
 import com.repository.LogRepository;
 import com.util.GsonUtil;
@@ -15,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-
 /**
  * Created by Donnie on 2017/2/20.
  */
@@ -24,7 +21,6 @@ import java.util.Date;
 @Service
 @Slf4j
 public class SMSService {
-    private static Logger logger = LoggerFactory.getLogger(SMSService.class);
     @Autowired
     private UrlUtil urlUtil;
     @Autowired

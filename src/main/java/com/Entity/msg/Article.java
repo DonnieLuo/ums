@@ -18,10 +18,10 @@ public class Article {
     private String content_source_url;
     private String content;
     private String digest;
-    private String show_cover_pic;
+    private int show_cover_pic;
 
-    public Article(String thumb_media_id, String content) {
+    public Article(String thumb_media_id, String title) {
         this.thumb_media_id = thumb_media_id;
-        this.content = content;
+        this.title = title;
     }
 }
