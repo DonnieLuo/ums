@@ -13,6 +13,8 @@ import com.util.GsonUtil;
 import com.util.UrlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,13 +32,13 @@ public class LoginController{
     @Autowired
     private LogRepository logRepository;
     @Autowired
-//    private AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     private Gson gson = GsonUtil.getInstance();
 
     @RequestMapping("/")
     public String login() {
-//        log.info(authenticationManager.toString());
+        log.info(authenticationManager.toString());
         return "login";
     }
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
