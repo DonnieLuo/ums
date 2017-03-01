@@ -1,6 +1,8 @@
 package com;
 
+import com.repository.UserRepository;
 import com.service.AuthenticationProviderImp;
+import com.service.UserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,10 +18,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Created by Donnie on 2017/2/22.
  */
 @Configuration
-@EnableWebSecurity
 @Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     @Bean
@@ -33,15 +36,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
-    private static AuthenticationProviderImp authenticationProvider;
+    @Bean
+    public UserDetailService userDetailService() {
+        return new UserDetailService(userRepository);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http
                 .authorizeRequests()
-                    .antMatchers("/", "/login").permitAll()
+                    .antMatchers("/test2", "/login").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
@@ -60,10 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService());
-//        auth.authenticationProvider(authenticationProvider);
-        auth.authenticationProvider(new AuthenticationProviderImp());
+        auth.userDetailsService(userDetailService());
+//        auth.authenticationProvider(new JwtAuthenticationProvider(baseUserService, tokenService));
+        auth.authenticationProvider(new AuthenticationProviderImp(userRepository,userDetailService()));
 
-        log.info("configure(AuthenticationManagerBuilder auth), auth={}",auth);
     }
 }

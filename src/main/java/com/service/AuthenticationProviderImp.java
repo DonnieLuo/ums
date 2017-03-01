@@ -1,14 +1,8 @@
 package com.service;
 
 import com.Entity.User;
-import com.repository.LogRepository;
 import com.repository.UserRepository;
-import com.service.UserDetailService;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,9 +10,7 @@ import org.springframework.security.authentication.dao.AbstractUserDetailsAuthen
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -28,12 +20,35 @@ import org.springframework.util.Assert;
 @Service
 public class AuthenticationProviderImp extends AbstractUserDetailsAuthenticationProvider {
 
-    public AuthenticationProviderImp() {}
+    public AuthenticationProviderImp(UserRepository userRepository, UserDetailService userDetailService) {
+        this.userRepository = userRepository;
+        this.userDetailService = userDetailService;
+    }
     private static final String USER_NOT_FOUND_PASSWORD = "userNotFoundPassword";
-    @Autowired
+
     private UserRepository userRepository;
-    @Autowired
-    protected UserDetailService userDetailService;
+    private UserDetailService userDetailService;
+
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public UserDetailService getUserDetailService() {
+        return userDetailService;
+    }
+
+    public void setUserDetailService(UserDetailService userDetailService) {
+        this.userDetailService = userDetailService;
+    }
+
+    //    @Bean
+//    public UserDetailService userDetailService() {
+//        return new UserDetailService();
+//    }
     private Md5PasswordEncoder md5PasswordEncoder =  new Md5PasswordEncoder();
 
     @Override

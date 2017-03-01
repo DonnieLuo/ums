@@ -4,7 +4,6 @@ package com.controller;
  * Created by Donnie on 2017/2/17.
  */
 
-import com.Entity.User;
 import com.Entity.msg.Article;
 import com.Entity.msg.MpNews;
 import com.Entity.msg.MpNewsMsg;
@@ -15,20 +14,20 @@ import com.util.GsonUtil;
 import com.util.UrlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +52,10 @@ public class LoginController{
     public String test() {
         return "test";
     }
+    @RequestMapping("/test2")
+    public String test2() {
+        return "test2";
+    }
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     public String auth(@RequestParam String username, @RequestParam String password) {
 
@@ -67,6 +70,16 @@ public class LoginController{
         log.debug("------/auth-debug");
         return "sendLog";
     }
+
+    @RequestMapping(value = "getAccessToken", method = RequestMethod.GET)
+    public @ResponseBody String getToken(HttpServletRequest request){
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        Authentication authentication = tryToAuthenticateWithUsernameAndPassword(username, password);
+        return "";
+    }
+
+
     private Authentication tryToAuthenticateWithUsernameAndPassword(String username, String password) {
         UsernamePasswordAuthenticationToken requestAuthentication = new UsernamePasswordAuthenticationToken(username, password);
         return tryToAuthenticate(requestAuthentication);

@@ -1,31 +1,38 @@
 package com.service;
 
 import com.Entity.User;
-import com.repository.LogRepository;
 import com.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-
 
 import java.util.Collection;
 
 /**
  * Created by donnie on 17-2-28.
  */
-@Service
+
 public class UserDetailService implements UserDetailsService {
-    public UserDetailService () {}
-    @Autowired
+    public UserDetailService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     private UserRepository userRepository;
+
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
+        if (user == null) {throw new UsernameNotFoundException("Username not found");}
         UserDetails userDetails = new UserDetail(user);
         return userDetails;
     }

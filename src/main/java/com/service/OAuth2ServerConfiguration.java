@@ -17,11 +17,9 @@
 package com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -34,9 +32,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
-
-import javax.sql.DataSource;
 
 @Configuration
 public class OAuth2ServerConfiguration {
@@ -45,8 +40,7 @@ public class OAuth2ServerConfiguration {
 
 	@Configuration
 	@EnableResourceServer
-	protected static class ResourceServerConfiguration extends
-			ResourceServerConfigurerAdapter {
+	protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
 		@Override
 		public void configure(ResourceServerSecurityConfigurer resources) {
@@ -63,32 +57,34 @@ public class OAuth2ServerConfiguration {
 			http
 			   .authorizeRequests()
 			     //用户
-			     .antMatchers(HttpMethod.POST,"/user**").authenticated();
- 
+//			     .antMatchers(HttpMethod.POST,"/user**").authenticated();
+					.anyRequest().authenticated();
 			// @formatter:on
-	
+
 		}
 	}
 
 	@Configuration
 	@EnableAuthorizationServer
 	protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
-		
+
 //		@Autowired
 //		private DataSource dataSource;
 
 		private TokenStore tokenStore;
 
+		@SuppressWarnings("SpringJavaAutowiringInspection")
 		@Autowired
-		private static AuthenticationManager authenticationManager;
+		private  AuthenticationManager authenticationManager;
 
+		@SuppressWarnings("SpringJavaAutowiringInspection")
 		@Autowired
-		private static UserDetailService userDetailService;
+		private  UserDetailService userDetailService;
 
 
 		@Override
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-			
+
 //			tokenStore = new JdbcTokenStore(dataSource);
 			tokenStore = new InMemoryTokenStore();
 			// @formatter:off
