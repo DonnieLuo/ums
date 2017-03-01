@@ -8,8 +8,6 @@ import com.util.GsonUtil;
 import com.util.UrlUtil;
 import com.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 public class SMSService {
-    @Autowired
-    private UrlUtil urlUtil;
     @Autowired
     private XmlUtil xmlUtil;
     @Autowired
@@ -39,7 +35,7 @@ public class SMSService {
     public SMSResult send(SMS sms) {
         Gson gson = GsonUtil.getInstance();
         String jsonContent = gson.toJson(sms);
-        String xmlResult = urlUtil.urlPost(SMSUrl, jsonContent);
+        String xmlResult = UrlUtil.urlPost(SMSUrl, jsonContent);
         SMSResult smsResult = xmlUtil.fromXml(xmlResult, SMSResult.class);
         log.debug("send sms to {}, result: {}",sms.getMobile(), smsResult.getReturnstatus());
 
