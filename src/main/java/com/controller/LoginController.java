@@ -4,11 +4,13 @@ package com.controller;
  * Created by Donnie on 2017/2/17.
  */
 
+import com.Entity.User;
 import com.Entity.msg.Article;
 import com.Entity.msg.MpNews;
 import com.Entity.msg.MpNewsMsg;
 import com.google.gson.Gson;
 import com.repository.LogRepository;
+import com.repository.UserRepository;
 import com.util.GsonUtil;
 import com.util.UrlUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,28 +39,35 @@ public class LoginController{
     @Autowired
     private LogRepository logRepository;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     private Gson gson = GsonUtil.getInstance();
 
-    @RequestMapping("/")
+    @RequestMapping("/login")
     public String login() {
-        log.info(authenticationManager.toString());
         return "login";
+    }
+    @RequestMapping("/test")
+    public String test() {
+        return "test";
     }
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     public String auth(@RequestParam String username, @RequestParam String password) {
-        if (true) {
+
             try {
-//                Authentication authentication = tryToAuthenticateWithUsernameAndPassword(username, password);
-//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//                log.info("id:{}",userRepository.findByUsername(username).getId());
+                Authentication authentication = tryToAuthenticateWithUsernameAndPassword(username, password);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (BadCredentialsException e) {
                 log.info(e.toString());
             }
-        }
+
+        log.debug("------/auth-debug");
         return "sendLog";
     }
-    /*private Authentication tryToAuthenticateWithUsernameAndPassword(String username, String password) {
+    private Authentication tryToAuthenticateWithUsernameAndPassword(String username, String password) {
         UsernamePasswordAuthenticationToken requestAuthentication = new UsernamePasswordAuthenticationToken(username, password);
         return tryToAuthenticate(requestAuthentication);
     }
@@ -63,7 +77,7 @@ public class LoginController{
             throw new InternalAuthenticationServiceException("auth failed");
         }
         return responseAuthentication;
-    }*/
+    }
     @RequestMapping("/print")
     public String sendWechat() throws Exception {
         String accessToken = UrlUtil.getAccessToken();

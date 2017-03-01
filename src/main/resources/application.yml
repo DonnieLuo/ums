@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/gm
@@ -13,7 +14,7 @@ spring:
 
     hibernate:
     # Hibernate ddl auto (create, create-drop, update)
-      ddl-auto: create
+      ddl-auto: update
         #spring.jpa.database=org.hibernate.dialect.MySQL5InnoDBDialect
       dialect: org.hibernate.dialect.MySQLDialect
   thymeleaf:
@@ -25,3 +26,5 @@ spring:
 conf:
   urls:
     gettoken: https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wxac0c7f608dd7b462&corpsecret=94vG_nM3VE1HM0iACx9_fxOLFuapDyGjZJKjyB5jrpviDQTr0LSUYY_28IaOppel
+logging:
+  level: debug
