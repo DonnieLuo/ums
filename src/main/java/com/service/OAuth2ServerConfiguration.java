@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -28,6 +29,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -57,7 +59,7 @@ public class OAuth2ServerConfiguration {
 			http
 			   .authorizeRequests()
 			     //用户
-//			     .antMatchers(HttpMethod.POST,"/user**").authenticated();
+					.antMatchers("/oauth/token","/gmtoken","/login","/send/**").permitAll()
 					.anyRequest().authenticated();
 			// @formatter:on
 
@@ -81,7 +83,15 @@ public class OAuth2ServerConfiguration {
 		@Autowired
 		private  UserDetailService userDetailService;
 
+		@Override
+		public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
 
+			/**
+			 * allow表示允许在认证的时候把参数放到url之中传过去
+			 * @see org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter
+			 */
+			oauthServer.allowFormAuthenticationForClients();
+		}
 		@Override
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 
@@ -90,9 +100,15 @@ public class OAuth2ServerConfiguration {
 			// @formatter:off
 			endpoints
 //				.tokenStore(tokenStore)
-				.authenticationManager(this.authenticationManager)
+
+				.authenticationManager(authenticationManager)
 				.userDetailsService(userDetailService);
 			// @formatter:on
+
+			/*
+             * .pathMapping("/oauth/authorize", "/oauth2/authorize")
+             * .pathMapping("/oauth/token", "/oauth2/token");
+             */
 		}
 
 		@Override
@@ -100,12 +116,14 @@ public class OAuth2ServerConfiguration {
 			// @formatter:off
 			clients
 				.inMemory()
-					.withClient("clientapp")
+
+					.withClient("appclient")
 						.authorizedGrantTypes("password", "refresh_token")
 						.authorities("USER")
 						.scopes("read", "write")
 						.resourceIds(RESOURCE_ID)
 						.secret("123456");
+
 			// @formatter:on
 		}
 

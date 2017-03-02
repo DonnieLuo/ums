@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -179,5 +180,34 @@ public class UrlUtil {
         }
         log.error("------get access token failed");
         return "";
+    }
+    //standard post method, more standard than urlPost
+    public static String urlPost2(String urlStr, String param) {
+        StringBuilder response = new StringBuilder();
+        PrintWriter out = null;
+        BufferedReader in = null;
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            //post method
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setRequestMethod("POST");
+            out = new PrintWriter(conn.getOutputStream());
+            out.print(param);
+            out.flush();
+
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String inputLine = null;
+            while ( (inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            out.close();
+        } catch (Exception e) {
+            log.error(e.toString());
+        }
+        log.debug("------json post result:{}", response);
+        return response.toString();
     }
 }

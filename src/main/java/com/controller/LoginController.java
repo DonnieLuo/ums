@@ -21,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,6 +44,7 @@ public class LoginController{
     private AuthenticationManager authenticationManager;
 
     private Gson gson = GsonUtil.getInstance();
+    public static String gmTokenUrl = "http://localhost:8080/oauth/token?grant_type=password&client_id=appclient&client_secret=123456&username=USERNAME&password=PASSWORD";
 
     @RequestMapping("/login")
     public String login() {
@@ -52,10 +54,11 @@ public class LoginController{
     public String test() {
         return "test";
     }
-    @RequestMapping("/test2")
+    @RequestMapping("/notoken")
     public String test2() {
         return "test2";
     }
+
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     public String auth(@RequestParam String username, @RequestParam String password) {
 
@@ -68,15 +71,20 @@ public class LoginController{
             }
 
         log.debug("------/auth-debug");
-        return "sendLog";
+//        return "sendLog";
+        return "redirect:/oauth/token";
     }
 
-    @RequestMapping(value = "getAccessToken", method = RequestMethod.GET)
-    public @ResponseBody String getToken(HttpServletRequest request){
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        Authentication authentication = tryToAuthenticateWithUsernameAndPassword(username, password);
-        return "";
+    @RequestMapping(value = "/gmtoken", method = RequestMethod.GET)
+    public @ResponseBody String getToken(HttpServletRequest request) throws Exception {
+        String username = request.getParameter("user");
+        String password = request.getParameter("pass");
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            log.error("------ request format: /oauth/token?user=USERNAME&pass=PASSWORD");
+            throw new Exception("");
+        }
+        String url = gmTokenUrl.replace("USERNAME", username).replace("PASSWORD", password);
+        return UrlUtil.urlPost2(url, "");
     }
 
 
@@ -91,15 +99,14 @@ public class LoginController{
         }
         return responseAuthentication;
     }
-    @RequestMapping("/print")
+    @RequestMapping("/send/news")
     public String sendWechat() throws Exception {
         String accessToken = UrlUtil.getAccessToken();
-
         MpNewsMsg msg = new MpNewsMsg();
 
-        Article article = new Article(UrlUtil.upload("C:\\Users\\Donnie\\Desktop\\7c739d6.jpg",accessToken, "image" ),"testTitle");
+        Article article = new Article(UrlUtil.upload("C:\\Users\\Donnie\\Desktop\\7c739d6.jpg",accessToken, "image" ),"【外盘日讯】 特朗普演说反应正面 ：美联储3月加息机率暴增至66.4%");
         article.setDigest("this is the digest");
-        article.setContent("Content");
+        article.setContent("作者：芝商所特约评论员寇健<br><br>市场对昨天晚上特朗普总统在国会的演说表现了非常正面的反应。<br><br>芝商所联邦储备银行观测站 (FedWatch Tool) 数据显示，3月份联邦储备银行 FOMC会议加息的可能性从昨天的 35.4% 增加到今天的 66.4%。");
         article.setShow_cover_pic(1);
 
         MpNews mpNews = new MpNews();
