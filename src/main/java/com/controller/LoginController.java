@@ -4,6 +4,7 @@ package com.controller;
  * Created by Donnie on 2017/2/17.
  */
 
+import com.Entity.Constants;
 import com.Entity.msg.Article;
 import com.Entity.msg.MpNews;
 import com.Entity.msg.MpNewsMsg;
@@ -104,12 +105,13 @@ public class LoginController{
         String accessToken = UrlUtil.getAccessToken();
         MpNewsMsg msg = new MpNewsMsg();
 
-        Article article = new Article(UrlUtil.upload("C:\\Users\\Donnie\\Desktop\\7c739d6.jpg",accessToken, "image" ),"【外盘日讯】 特朗普演说反应正面 ：美联储3月加息机率暴增至66.4%");
-//        Article article = new Article("2kfb8gad2m8Tv9KpPgmeZ60ND0nYSMOp0jZxmFvyAi_BMZo-ILfryiGQsIZKAzNq2","【外盘日讯】");//【外盘日讯】 特朗普演说反应正面 ：美联储3月加息机率暴增至66.4%
-
-        article.setDigest("this is the digest");
-        article.setContent("作者：芝商所特约评论员寇健<br><br>市场对昨天晚上特朗普总统在国会的演说表现了非常正面的反应。<br><br>芝商所联邦储备银行观测站 (FedWatch Tool) 数据显示，3月份联邦储备银行 FOMC会议加息的可能性从昨天的 35.4% 增加到今天的 66.4%。 <img data-s='150,640' data-type='jpeg' src='http://mmbiz.qpic.cn/mmocbiz/tHNy0ZThe8x95Hb4kCtdJfAGRkpJa2PYibASLObTTH26NiaKtYE1V0zw/0?' data-ratio='0.6' data-w='550'/>");
-        article.setShow_cover_pic(1);
+//        Article article = new Article(UrlUtil.upload("C:\\Users\\Donnie\\Desktop\\7c739d6.jpg",accessToken, "image" ),"【外盘日讯】 特朗普演说反应正面 ：美联储3月加息机率暴增至66.4%");
+        Article article = new Article("2kfb8gad2m8Tv9KpPgmeZ60ND0nYSMOp0jZxmFvyAi_BMZo-ILfryiGQsIZKAzNq2","【外盘日讯】 特朗普演说反应正面 ：美联储3月加息机率暴增至66.4%");//
+        article.setContent(Constants.content);
+//        article.setDigest("this is the digest");
+//        article.setContent("作者：芝商所特约评论员寇健<>市场对昨天晚上特朗普总统在国会的演说表现了非常正面的反应。 芝商所联邦储备银行观测站 (FedWatch Tool) 数据显示，3月份联邦储备银行 FOMC会议加息的可能性从昨天的 35.4% 增加到今天的 66.4%。 <img data-s='150,640' data-type='jpeg' src='http://mmbiz.qpic.cn/mmocbiz/tHNy0ZThe8x95Hb4kCtdJfAGRkpJa2PYibASLObTTH26NiaKtYE1V0zw/0?' data-ratio='0.6' data-w='550'/>");
+        article.setDigest("作者：芝商所特约评论员寇健<>市场对昨天晚上特朗普总统在国会的演说表现了非常正面的反应");
+        article.setShow_cover_pic(0);
 
         MpNews mpNews = new MpNews();
         List<Article> articleList = new ArrayList<Article>();
