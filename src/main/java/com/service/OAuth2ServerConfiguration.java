@@ -31,6 +31,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
@@ -73,7 +74,10 @@ public class OAuth2ServerConfiguration {
 //		@Autowired
 //		private DataSource dataSource;
 
-		private TokenStore tokenStore;
+		@Bean
+		public TokenStore tokenStore(){
+			return new InMemoryTokenStore();
+		};
 
 		@SuppressWarnings("SpringJavaAutowiringInspection")
 		@Autowired
@@ -89,6 +93,7 @@ public class OAuth2ServerConfiguration {
 			/**
 			 * allow表示允许在认证的时候把参数放到url之中传过去
 			 * @see org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter
+			 * @see OAuth2AuthenticationProcessingFilter
 			 */
 			oauthServer.allowFormAuthenticationForClients();
 		}
@@ -96,10 +101,10 @@ public class OAuth2ServerConfiguration {
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 
 //			tokenStore = new JdbcTokenStore(dataSource);
-			tokenStore = new InMemoryTokenStore();
+//			tokenStore = new InMemoryTokenStore();
 			// @formatter:off
 			endpoints
-//				.tokenStore(tokenStore)
+				.tokenStore(tokenStore())
 
 				.authenticationManager(authenticationManager)
 				.userDetailsService(userDetailService);
@@ -132,7 +137,7 @@ public class OAuth2ServerConfiguration {
 		public DefaultTokenServices tokenServices() {
 			DefaultTokenServices tokenServices = new DefaultTokenServices();
 			tokenServices.setSupportRefreshToken(true);
-			tokenServices.setTokenStore(this.tokenStore);
+			tokenServices.setTokenStore(tokenStore());
 			return tokenServices;
 		}
 

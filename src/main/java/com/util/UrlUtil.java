@@ -2,8 +2,16 @@ package com.util;
 
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -21,12 +29,14 @@ import java.security.NoSuchProviderException;
  */
 @Slf4j
 public class UrlUtil {
-    private static final String APPID = "wx3a42b774b7b91ccf";
-    private static final String APPSECRET = "tpfikag8WOgdhafho3-cEgqJVQwTN3daf-u9182mUbVT4H-uHsTqYUye7uk6Acnr";
-
-    private static final String ACCESS_TOKEN_URL = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wx3a42b774b7b91ccf&corpsecret=tpfikag8WOgdhafho3-cEgqJVQwTN3daf-u9182mUbVT4H-uHsTqYUye7uk6Acnr";
-
-    private static final String UPLOAD_URL = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE";
+    @Value("${conf.corp.id}")
+    private static String APPID;// = "wx3a42b774b7b91ccf";
+    @Value("${conf.corp.secret}")
+    private static String APPSECRET;// = "tpfikag8WOgdhafho3-cEgqJVQwTN3daf-u9182mUbVT4H-uHsTqYUye7uk6Acnr";
+    @Value("${conf.url.gettoken}")
+    private static String ACCESS_TOKEN_URL;// = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wx3a42b774b7b91ccf&corpsecret=tpfikag8WOgdhafho3-cEgqJVQwTN3daf-u9182mUbVT4H-uHsTqYUye7uk6Acnr";
+    @Value("${conf.url.upload}")
+    private static String UPLOAD_URL;// = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE";
 
     public static String urlGet (String urlStr) {
         StringBuilder json = new StringBuilder();
@@ -59,13 +69,17 @@ public class UrlUtil {
         PrintWriter out = null;
         BufferedReader in = null;
         try {
+
+            param = param.replace("","");
             URL url = new URL(urlStr);
             URLConnection conn = url.openConnection();
             //post method
             conn.setDoOutput(true);
             conn.setDoInput(true);
 
-            out = new PrintWriter(conn.getOutputStream());
+//            out = new PrintWriter(conn.getOutputStream());
+            //jie jue luan ma
+            out = new PrintWriter(new OutputStreamWriter(conn.getOutputStream(),"utf-8"));
             out.print(param);
             out.flush();
 
@@ -92,7 +106,7 @@ public class UrlUtil {
         String url = UPLOAD_URL.replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
 
         URL urlObj = new URL(url);
-        //Á¬½Ó
+        //è¿æ¥
         HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
 
         con.setRequestMethod("POST");
@@ -100,11 +114,11 @@ public class UrlUtil {
         con.setDoOutput(true);
         con.setUseCaches(false);
 
-        //ÉèÖÃÇëÇóÍ·ĞÅÏ¢
+        //è®¾ç½®è¯·æ±‚å¤´ä¿¡æ¯
         con.setRequestProperty("Connection", "Keep-Alive");
         con.setRequestProperty("Charset", "UTF-8");
 
-        //ÉèÖÃ±ß½ç
+        //è®¾ç½®è¾¹ç•Œ
         String BOUNDARY = "----------" + System.currentTimeMillis();
         con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
 
@@ -117,13 +131,13 @@ public class UrlUtil {
 
         byte[] head = sb.toString().getBytes("utf-8");
 
-        //»ñµÃÊä³öÁ÷
+        //è·å¾—è¾“å‡ºæµ
         OutputStream out = new DataOutputStream(con.getOutputStream());
-        //Êä³ö±íÍ·
+        //è¾“å‡ºè¡¨å¤´
         out.write(head);
 
-        //ÎÄ¼şÕıÎÄ²¿·Ö
-        //°ÑÎÄ¼şÒÑÁ÷ÎÄ¼şµÄ·½Ê½ ÍÆÈëµ½urlÖĞ
+        //æ–‡ä»¶æ­£æ–‡éƒ¨åˆ†
+        //æŠŠæ–‡ä»¶å·²æµæ–‡ä»¶çš„æ–¹å¼ æ¨å…¥åˆ°urlä¸­
         DataInputStream in = new DataInputStream(new FileInputStream(file));
         int bytes = 0;
         byte[] bufferOut = new byte[1024];
@@ -132,8 +146,8 @@ public class UrlUtil {
         }
         in.close();
 
-        //½áÎ²²¿·Ö
-        byte[] foot = ("\r\n--" + BOUNDARY + "--\r\n").getBytes("utf-8");//¶¨Òå×îºóÊı¾İ·Ö¸ôÏß
+        //ç»“å°¾éƒ¨åˆ†
+        byte[] foot = ("\r\n--" + BOUNDARY + "--\r\n").getBytes("utf-8");//å®šä¹‰æœ€åæ•°æ®åˆ†éš”çº¿
 
         out.write(foot);
 
@@ -144,7 +158,7 @@ public class UrlUtil {
         BufferedReader reader = null;
         String result = null;
         try {
-            //¶¨ÒåBufferedReaderÊäÈëÁ÷À´¶ÁÈ¡URLµÄÏìÓ¦
+            //å®šä¹‰BufferedReaderè¾“å…¥æµæ¥è¯»å–URLçš„å“åº”
             reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String line = null;
             while ((line = reader.readLine()) != null) {
@@ -210,4 +224,5 @@ public class UrlUtil {
         log.debug("------json post result:{}", response);
         return response.toString();
     }
+
 }

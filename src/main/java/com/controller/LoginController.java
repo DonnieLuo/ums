@@ -45,6 +45,7 @@ public class LoginController{
     private AuthenticationManager authenticationManager;
 
     private Gson gson = GsonUtil.getInstance();
+    private Gson gsonHtml = GsonUtil.getInstanceHtml();
     public static String gmTokenUrl = "http://localhost:8080/oauth/token?grant_type=password&client_id=appclient&client_secret=123456&username=USERNAME&password=PASSWORD";
 
     @RequestMapping("/login")
@@ -101,7 +102,7 @@ public class LoginController{
         return responseAuthentication;
     }
     @RequestMapping("/send/news")
-    public String sendWechat() throws Exception {
+    public @ResponseBody String sendWechat() throws Exception {
         String accessToken = UrlUtil.getAccessToken();
         MpNewsMsg msg = new MpNewsMsg();
 
@@ -110,7 +111,7 @@ public class LoginController{
         article.setContent(Constants.content);
 //        article.setDigest("this is the digest");
 //        article.setContent("作者：芝商所特约评论员寇健<>市场对昨天晚上特朗普总统在国会的演说表现了非常正面的反应。 芝商所联邦储备银行观测站 (FedWatch Tool) 数据显示，3月份联邦储备银行 FOMC会议加息的可能性从昨天的 35.4% 增加到今天的 66.4%。 <img data-s='150,640' data-type='jpeg' src='http://mmbiz.qpic.cn/mmocbiz/tHNy0ZThe8x95Hb4kCtdJfAGRkpJa2PYibASLObTTH26NiaKtYE1V0zw/0?' data-ratio='0.6' data-w='550'/>");
-        article.setDigest("作者：芝商所特约评论员寇健<>市场对昨天晚上特朗普总统在国会的演说表现了非常正面的反应");
+        article.setDigest("digest");
         article.setShow_cover_pic(0);
 
         MpNews mpNews = new MpNews();
@@ -123,12 +124,13 @@ public class LoginController{
         msg.setAgentid(0);
         msg.setMpnews(mpNews);
 
-        String jsonContent = gson.toJson(msg);
+        String jsonContent = gsonHtml.toJson(msg);
         String sendUrl = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + accessToken;
         log.debug("--------------------------jsonMsg:{}",jsonContent);
         return UrlUtil.urlPost(sendUrl, jsonContent);
     }
-    @RequestMapping(value = "/img",method = RequestMethod.GET)
+
+    /*@RequestMapping(value = "/img",method = RequestMethod.GET)
     public String selectImg() {
         return "uploadImg";
     }
@@ -136,12 +138,11 @@ public class LoginController{
     public String postImg(@RequestParam(value = "media") MultipartFile img) throws Exception {
         String result = uploadImg(img);
         return result;
-    }
-    public String uploadImg(MultipartFile img) throws Exception {
+    }*/
+    public String uploadImg(String fileUrl) throws Exception {
         String accessToken = UrlUtil.getAccessToken();
         String url = "https://qyapi.weixin.qq.com/cgi-bin/media/uploadimg?access_token="+accessToken;
         StringBuilder head = new StringBuilder("\r\n");
-        String fileUrl = "C:\\Users\\Donnie\\Desktop\\"+img.getOriginalFilename();
 
         String mediaId = UrlUtil.upload(fileUrl, UrlUtil.getAccessToken(), "image");
 

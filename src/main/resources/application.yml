@@ -24,7 +24,11 @@ spring:
 
         #spring.resources.static-locations=classpath:/resources/,classpath:/static/
 conf:
-  urls:
+  corp:
+    id: wx3a42b774b7b91ccf
+    corpsecret: tpfikag8WOgdhafho3-cEgqJVQwTN3daf-u9182mUbVT4H-uHsTqYUye7uk6Acnr
+  url:
     gettoken: https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wxac0c7f608dd7b462&corpsecret=94vG_nM3VE1HM0iACx9_fxOLFuapDyGjZJKjyB5jrpviDQTr0LSUYY_28IaOppel
+    upload: https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE
 logging:
-  level: debug
+  level: trace
