@@ -28,15 +28,21 @@ import java.security.NoSuchProviderException;
  * Created by Donnie on 2017/2/20.
  */
 @Slf4j
+@Component
 public class UrlUtil {
-    @Value("${conf.corp.id}")
-    private static String APPID;// = "wx3a42b774b7b91ccf";
-    @Value("${conf.corp.secret}")
+    private static String CORPID;    // = "wx3a42b774b7b91ccf";
     private static String APPSECRET;// = "tpfikag8WOgdhafho3-cEgqJVQwTN3daf-u9182mUbVT4H-uHsTqYUye7uk6Acnr";
-    @Value("${conf.url.gettoken}")
     private static String ACCESS_TOKEN_URL;// = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wx3a42b774b7b91ccf&corpsecret=tpfikag8WOgdhafho3-cEgqJVQwTN3daf-u9182mUbVT4H-uHsTqYUye7uk6Acnr";
-    @Value("${conf.url.upload}")
     private static String UPLOAD_URL;// = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE";
+
+    @Value("${conf.corp.id}")
+    public void setCORPID(String id) { CORPID = id; }
+    @Value("${conf.corp.secret}")
+    public void setAPPSECRET(String secret) { APPSECRET = secret; }
+    @Value("${conf.url.gettoken}")
+    public void setAccessTokenUrl(String tokenUrl){ ACCESS_TOKEN_URL = tokenUrl; }
+    @Value("${conf.url.upload}")
+    public void setUploadUrl(String uploadUrl) { UPLOAD_URL = uploadUrl; }
 
     public static String urlGet (String urlStr) {
         StringBuilder json = new StringBuilder();
@@ -186,14 +192,14 @@ public class UrlUtil {
     }
 
     public static String getAccessToken() {
-        String url = ACCESS_TOKEN_URL.replace("APPID", APPID).replace("APPSECRET", APPSECRET);
+        String url = ACCESS_TOKEN_URL.replace("APPID", CORPID).replace("APPSECRET", APPSECRET);
         String tokenJsonStr = urlGet(url);
         JsonObject jsonObject = GsonUtil.getInstance().fromJson(tokenJsonStr, JsonObject.class);
         if(jsonObject!=null){
             return jsonObject.get("access_token").getAsString();
         }
-        log.error("------get access token failed");
-        return "";
+        log.error("------get access token failed!");
+        return "get token failed!";
     }
     //standard post method, more standard than urlPost
     public static String urlPost2(String urlStr, String param) {

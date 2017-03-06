@@ -15,6 +15,7 @@ import com.util.GsonUtil;
 import com.util.UrlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -46,7 +47,8 @@ public class LoginController{
 
     private Gson gson = GsonUtil.getInstance();
     private Gson gsonHtml = GsonUtil.getInstanceHtml();
-    public static String gmTokenUrl = "http://localhost:8080/oauth/token?grant_type=password&client_id=appclient&client_secret=123456&username=USERNAME&password=PASSWORD";
+    @Value("${conf.url.gmtoken}")
+    public String gmTokenUrl;// = "http://localhost:8080/oauth/token?grant_type=password&client_id=appclient&client_secret=123456&username=USERNAME&password=PASSWORD";
 
     @RequestMapping("/login")
     public String login() {
@@ -130,11 +132,12 @@ public class LoginController{
         return UrlUtil.urlPost(sendUrl, jsonContent);
     }
 
-    /*@RequestMapping(value = "/img",method = RequestMethod.GET)
-    public String selectImg() {
-        return "uploadImg";
+    @RequestMapping(value = "/ez/get",method = RequestMethod.GET)
+    public @ResponseBody String selectImg() {
+
+        return UrlUtil.getAccessToken();
     }
-    @RequestMapping(value = "/img/upload", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/img/upload", method = RequestMethod.POST)
     public String postImg(@RequestParam(value = "media") MultipartFile img) throws Exception {
         String result = uploadImg(img);
         return result;

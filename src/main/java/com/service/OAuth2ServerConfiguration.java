@@ -60,7 +60,7 @@ public class OAuth2ServerConfiguration {
 			http
 			   .authorizeRequests()
 			     //用户
-					.antMatchers("/oauth/token","/gmtoken","/login","/send/**").permitAll()
+					.antMatchers("/oauth/token","/gmtoken","/login","/send/**","/ez/**").permitAll()
 					.anyRequest().authenticated();
 			// @formatter:on
 
@@ -77,7 +77,7 @@ public class OAuth2ServerConfiguration {
 		@Bean
 		public TokenStore tokenStore(){
 			return new InMemoryTokenStore();
-		};
+		}
 
 		@SuppressWarnings("SpringJavaAutowiringInspection")
 		@Autowired
