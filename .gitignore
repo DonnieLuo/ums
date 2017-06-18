@@ -2,11 +2,8 @@
 .gradle
 build
 bin
-js
-css
 classes
 out
-production_app.properties
 *.iml
 *.ipr
 *.iws

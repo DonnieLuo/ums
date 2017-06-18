@@ -15,7 +15,7 @@ import java.io.IOException;
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         String username = ((User)authentication.getPrincipal()).getUsername();
-        request.getServletContext().getAttribute("")
+        request.getServletContext().getAttribute("");
         String i="";
         response.sendRedirect("/");
     }
