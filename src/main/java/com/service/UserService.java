@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.Collection;
 
 /**
- * Created by donnie on 17-2-28.
+ * Created by donnie on 17/6/18.
  */
 
 public class UserDetailService implements UserDetailsService {
