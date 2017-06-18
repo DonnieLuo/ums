@@ -1,4 +1,4 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
 <link href="/js/bootstrap/bootstrap.min.css" rel="stylesheet"/>
 <link href="/css/bootstrap/bootstrap-table.css" rel="stylesheet"/>
@@ -18,13 +18,14 @@
     <div class="col-sm-6">
         <div class="panel panel-default">
             <div class="panel-body">
-                <form action="/user/save" method="post"  id="userForm" class="form-horizontal">
+                <form action="/user/update" method="post" id="userForm" class="form-horizontal">
+                    <input type="hidden" name="id"/>
                     <fieldset>
-                        <legend align="center">ADD AN USER</legend>
+                        <legend align="center">EDIT USER</legend>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">First Name</label>
+                            <label class="col-sm-3 control-label">First Name#{user.firstName}</label>
                             <div class="col-sm-8">
-                                <input type="text" name="firstName" id="name" class="form-control" />
+                                <input type="text" name="firstName" th:text="${firstName}" id="name" class="form-control" />
                             </div>
 
                         </div>
@@ -56,7 +57,7 @@
                     </fieldset>
                     <fieldset>
                         <div class="form-group" align="center">
-                            <button type="submit" id="createButton"style="width: 50%" class="btn btn-primary btn-lg">CREATE</button>
+                            <button type="submit" id="createButton"style="width: 50%" class="btn btn-primary btn-lg">Submit</button>
                         </div>
                     </fieldset>
                 </form>

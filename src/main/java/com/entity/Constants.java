@@ -1,4 +1,4 @@
-package com.Entity;
+package com.entity;
 
 /**
  * Created by donnie on 17-6-18.

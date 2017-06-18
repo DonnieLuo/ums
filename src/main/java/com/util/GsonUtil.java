@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * Created by Donnie on 2017/2/21.
+ * Created by Donnie on 2017/6/18.
  */
 public class GsonUtil {
     private static class GsonHolder{
